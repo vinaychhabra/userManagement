@@ -23,7 +23,13 @@ type User struct {
 }
 
 func main() {
+	db := setupDatabase()
+	defer db.Close()
 
+	http.HandleFunc("/register", registerHandler(db))
+	http.HandleFunc("/login", loginHandler(db))
+	fmt.Println("Server started on :8044")
+	log.Fatal(http.ListenAndServe(":8044", nil))
 }
 
 func setupDatabase() *sql.DB {
